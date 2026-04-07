@@ -24,6 +24,7 @@ class UserServiceImpl(
         userRepository.save(userEntity)
     }
 
+    @Transactional(readOnly = true)
     override fun getByUsernameAndPassword(username: String, password: String): User {
         val signEntity: SignEntity = signRepository.findByUsernameAndPassword(username = username, password = password)
             ?: throw EntityNotFoundException()
