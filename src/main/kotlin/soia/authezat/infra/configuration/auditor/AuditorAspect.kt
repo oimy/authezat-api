@@ -32,14 +32,14 @@ class AuditorAspect {
     fun handledControllerAuditCreatedBy(joinPoint: ProceedingJoinPoint, auditAnnotation: AuditDeletedBy) =
         setAuditor(joinPoint = joinPoint, headerName = auditAnnotation.headerName, required = auditAnnotation.required)
 
-    private fun setAuditor(joinPoint: ProceedingJoinPoint, headerName: String, required: Boolean) {
+    private fun setAuditor(joinPoint: ProceedingJoinPoint, headerName: String, required: Boolean): Any? {
         require(headerName.isNotBlank()) { "headerName cannot be blank" }
 
         val request: HttpServletRequest = getServletRequest()
         val createdBy = request.getAuditedBy(headerName = headerName, required = required)
         try {
             AuditorContextHolder.setAuditor(auditor = createdBy)
-            joinPoint.proceed()
+            return joinPoint.proceed()
         } finally {
             AuditorContextHolder.clear()
         }
