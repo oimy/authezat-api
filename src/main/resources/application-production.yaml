@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: authezat
+
+  jpa:
+    open-in-view: false
+
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
+
+springdoc:
+  api-docs:
+    enabled: true

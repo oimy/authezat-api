@@ -9,10 +9,19 @@ spring:
     password: 1234
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
-    open-in-view: false
+    open-in-view: true
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         highlight_sql: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
+
+springdoc:
+  api-docs:
+    enabled: true
