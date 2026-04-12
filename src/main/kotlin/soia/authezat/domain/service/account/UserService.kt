@@ -8,4 +8,6 @@ interface UserService {
 
     fun getByUsernameAndPassword(username: String, password: String): User
 
+    fun findBySrl(srl: Long): User
+
 }

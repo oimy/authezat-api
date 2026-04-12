@@ -39,13 +39,17 @@ class SessionController(
             expiredAt = expiredAt
         )
 
-        return SessionPayload(sessionKey = session.sessionKey, expiredAt = session.expiredAt.asOffset())
+        return SessionPayload(
+            sessionKey = session.sessionKey,
+            expiredAt = session.expiredAt.asOffset(),
+            userSrl = session.userSrl
+        )
     }
 
     @GetMapping("")
-    fun findBySessionKey(sessionKey: String): SessionPayload =
+    fun findBySessionKey(@RequestParam sessionKey: String): SessionPayload =
         sessionService.findBySessionKey(key = sessionKey).let {
-            SessionPayload(sessionKey = it.sessionKey, expiredAt = it.expiredAt.asOffset())
+            SessionPayload(sessionKey = it.sessionKey, expiredAt = it.expiredAt.asOffset(), userSrl = it.userSrl)
         }
 
 }

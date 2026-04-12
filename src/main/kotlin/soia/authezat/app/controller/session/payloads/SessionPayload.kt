@@ -5,4 +5,5 @@ import java.time.OffsetDateTime
 data class SessionPayload(
     val sessionKey: String,
     val expiredAt: OffsetDateTime,
+    val userSrl: Long,
 )

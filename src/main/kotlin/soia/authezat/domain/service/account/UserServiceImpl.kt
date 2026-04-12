@@ -1,6 +1,7 @@
 package soia.authezat.domain.service.account
 
 import jakarta.persistence.EntityNotFoundException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import soia.authezat.domain.service.account.values.User
@@ -31,5 +32,10 @@ class UserServiceImpl(
 
         return User(signEntity.user)
     }
+
+    @Transactional(readOnly = true)
+    override fun findBySrl(srl: Long): User =
+        userRepository.findByIdOrNull(srl)?.let { User(it) }
+            ?: throw EntityNotFoundException()
 
 }
