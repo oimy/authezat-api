@@ -10,7 +10,7 @@ import soia.authezat.infra.database.dolphin.account.SignRepository
 import soia.authezat.infra.database.dolphin.account.UserEntity
 import soia.authezat.infra.database.dolphin.account.UserRepository
 
-@Service(value = "AccountUserService")
+@Service(value = "accountUserService")
 class UserServiceImpl(
     private val userRepository: UserRepository,
     private val signRepository: SignRepository,

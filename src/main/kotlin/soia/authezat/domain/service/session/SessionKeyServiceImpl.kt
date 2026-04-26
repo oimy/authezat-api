@@ -2,7 +2,7 @@ package soia.authezat.domain.service.session
 
 import org.springframework.stereotype.Service
 
-@Service(value = "SimpleSessionKeyService")
+@Service(value = "simpleSessionKeyService")
 class SessionKeyServiceImpl : SessionKeyService {
 
     companion object {
