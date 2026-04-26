@@ -1,4 +1,4 @@
-package soia.authezat.infra.configuration.auditor
+package soia.authezat.infra.database.configuration.auditor
 
 import jakarta.servlet.http.HttpServletRequest
 import org.aspectj.lang.ProceedingJoinPoint
@@ -7,10 +7,10 @@ import org.aspectj.lang.annotation.Aspect
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
-import soia.authezat.infra.configuration.auditor.annotations.AuditAccessedBy
-import soia.authezat.infra.configuration.auditor.annotations.AuditCreatedBy
-import soia.authezat.infra.configuration.auditor.annotations.AuditDeletedBy
-import soia.authezat.infra.configuration.auditor.annotations.AuditModifiedBy
+import soia.authezat.infra.database.configuration.auditor.annotations.AuditAccessedBy
+import soia.authezat.infra.database.configuration.auditor.annotations.AuditCreatedBy
+import soia.authezat.infra.database.configuration.auditor.annotations.AuditDeletedBy
+import soia.authezat.infra.database.configuration.auditor.annotations.AuditModifiedBy
 
 @Aspect
 @Component

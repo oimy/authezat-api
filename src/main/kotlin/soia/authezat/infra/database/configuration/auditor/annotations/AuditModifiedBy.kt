@@ -1,4 +1,4 @@
-package soia.authezat.infra.configuration.auditor.annotations
+package soia.authezat.infra.database.configuration.auditor.annotations
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)

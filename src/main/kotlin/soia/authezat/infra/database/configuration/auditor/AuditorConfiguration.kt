@@ -1,4 +1,4 @@
-package soia.authezat.infra.configuration.auditor
+package soia.authezat.infra.database.configuration.auditor
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
