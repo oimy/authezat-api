@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*
 import soia.authezat.app.controller.account.payloads.AccountSavePayload
 import soia.authezat.app.controller.account.payloads.UserPayload
 import soia.authezat.domain.service.account.UserService
-import soia.authezat.infra.configuration.auditor.annotations.AuditCreatedBy
+import soia.authezat.infra.database.configuration.auditor.annotations.AuditCreatedBy
 
 @RestController
 @RequestMapping("/account/users")

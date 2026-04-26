@@ -9,7 +9,7 @@ import soia.authezat.domain.service.account.values.User
 import soia.authezat.domain.service.session.SessionKeyService
 import soia.authezat.domain.service.session.SessionService
 import soia.authezat.domain.service.session.values.Session
-import soia.authezat.infra.configuration.auditor.annotations.AuditCreatedBy
+import soia.authezat.infra.database.configuration.auditor.annotations.AuditCreatedBy
 import java.time.LocalDateTime
 
 @RestController
