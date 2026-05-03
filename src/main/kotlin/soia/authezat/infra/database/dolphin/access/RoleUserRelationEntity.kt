@@ -5,8 +5,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import soia.authezat.infra.database.dolphin.account.UserEntity
-import soia.authezat.infra.database.dolphin.base.BaseEntity
-import soia.authezat.infra.database.dolphin.server.EndpointEntity
+import soia.authezat.infra.database.dolphin.base.ImmutableBaseEntity
 
 
 @Entity
@@ -20,4 +19,4 @@ class RoleUserRelationEntity(
     @ManyToOne(optional = false)
     var user: UserEntity,
 ) :
-    BaseEntity()
+    ImmutableBaseEntity()
