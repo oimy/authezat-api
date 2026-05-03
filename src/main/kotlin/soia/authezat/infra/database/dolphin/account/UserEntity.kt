@@ -1,6 +1,7 @@
 package soia.authezat.infra.database.dolphin.account
 
 import jakarta.persistence.*
+import soia.authezat.infra.database.dolphin.access.RoleUserRelationEntity
 import soia.authezat.infra.database.dolphin.base.BaseEntity
 import soia.authezat.infra.database.dolphin.session.SessionEntity
 
@@ -17,5 +18,8 @@ class UserEntity(
 
     @OneToMany(mappedBy = "user", cascade = [(CascadeType.ALL)], orphanRemoval = true)
     var sessions: MutableList<SessionEntity> = mutableListOf(),
+
+    @OneToMany(mappedBy = "user", cascade = [(CascadeType.ALL)], orphanRemoval = true)
+    var roleRelations: MutableList<RoleUserRelationEntity> = mutableListOf(),
 ) :
     BaseEntity()

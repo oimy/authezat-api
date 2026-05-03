@@ -25,7 +25,7 @@ class EndpointServiceImplTest(
     @Nested
     inner class FindAllByServerSrlTest {
         @Test
-        @DisplayName("유효한 서버 srl이 주어졌을 때, findAllByServerSrl를 호출하면, 해당 서버 srl와 일치하는 Endpoint들을 반환합니다.")
+        @DisplayName("유효한 서버 srl이 주어졌을 때, 해당 서버 srl와 일치하는 Endpoint들을 반환합니다.")
         fun test_10() {
             // given
             val givenServerSrl: Long = serverEntities[0].srl
@@ -39,7 +39,7 @@ class EndpointServiceImplTest(
         }
 
         @Test
-        @DisplayName("유효하지 않은 서버 srl이 주어졌을 때, findAllByServerSrl를 호출하면, EntityNotFoundException을 일으킵니다.")
+        @DisplayName("유효하지 않은 서버 srl이 주어졌을 때, EntityNotFoundException을 일으킵니다.")
         fun test_20() {
             // given
             val givenServerSrl: Long = serverEntities[0].srl * -1
