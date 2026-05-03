@@ -1,5 +1,6 @@
 package soia.authezat.domain.service.account
 
+import soia.authezat.domain.service.access.values.Role
 import soia.authezat.domain.service.account.values.User
 
 interface UserService {
@@ -9,5 +10,7 @@ interface UserService {
     fun getByUsernameAndPassword(username: String, password: String): User
 
     fun findBySrl(srl: Long): User
+
+    fun getRolesBySrl(srl: Long): List<Role>
 
 }

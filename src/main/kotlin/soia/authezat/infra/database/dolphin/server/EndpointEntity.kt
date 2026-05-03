@@ -1,17 +1,12 @@
 package soia.authezat.infra.database.dolphin.server
 
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
+import jakarta.persistence.*
+import soia.authezat.infra.database.dolphin.access.RoleEndpointRelationEntity
 import soia.authezat.infra.database.dolphin.base.BaseEntity
 import soia.authezat.infra.database.dolphin.server.enums.EndpointMethod
 
 @Entity
-@Table(name = "servers")
+@Table(name = "endpoints")
 class EndpointEntity(
     @JoinColumn(nullable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -21,5 +16,8 @@ class EndpointEntity(
     var method: EndpointMethod,
 
     var path: String,
+
+    @OneToMany(mappedBy = "endpoint", cascade = [(CascadeType.ALL)], orphanRemoval = true)
+    var roleRelations: MutableList<RoleEndpointRelationEntity> = mutableListOf(),
 ) :
     BaseEntity()

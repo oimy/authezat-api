@@ -10,7 +10,7 @@ import soia.authezat.infra.database.dolphin.session.SessionEntity
 import soia.authezat.infra.database.dolphin.session.SessionRepository
 import java.time.LocalDateTime
 
-@Service(value = "SessionService")
+@Service(value = "sessionService")
 class SessionServiceImpl(
     private val sessionRepository: SessionRepository,
     private val userRepository: UserRepository,
