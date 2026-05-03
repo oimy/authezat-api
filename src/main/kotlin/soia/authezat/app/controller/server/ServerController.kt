@@ -2,6 +2,7 @@ package soia.authezat.app.controller.server
 
 import org.springframework.web.bind.annotation.*
 import soia.authezat.app.controller.server.payloads.EndpointPayload
+import soia.authezat.app.controller.server.payloads.EndpointSavePayload
 import soia.authezat.app.controller.server.payloads.ServerPayload
 import soia.authezat.domain.service.server.EndpointService
 import soia.authezat.domain.service.server.ServerService
@@ -20,8 +21,8 @@ class ServerController(
         }
 
     @PostMapping("/{srl}/endpoints")
-    fun saveEndpoint(@PathVariable srl: Long, endpointPayload: EndpointPayload) =
-        endpointService.save(serverSrl = srl, method = endpointPayload.method, path = endpointPayload.path)
+    fun saveEndpoint(@PathVariable srl: Long, endpointSave: EndpointSavePayload) =
+        endpointService.save(serverSrl = srl, method = endpointSave.method, path = endpointSave.path)
 
     @GetMapping("/{srl}/endpoints")
     fun findAllEndpointsByServerSrl(@PathVariable srl: Long): List<EndpointPayload> =

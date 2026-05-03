@@ -10,6 +10,6 @@ interface EndpointService {
 
     fun findAllByServerSrl(serverSrl: Long): List<Endpoint>
 
-    fun findAllByModifiedAtGreaterThenFetchRole(fromModifiedAt: LocalDateTime): List<Endpoint>
+    fun findAllByModifiedAtGreaterThenFetchRole(afterModifiedAt: LocalDateTime): List<Endpoint>
 
 }

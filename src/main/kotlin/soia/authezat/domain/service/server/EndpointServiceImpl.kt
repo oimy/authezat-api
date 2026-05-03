@@ -38,8 +38,8 @@ class EndpointServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun findAllByModifiedAtGreaterThenFetchRole(fromModifiedAt: LocalDateTime): List<Endpoint> =
-        endpointRepository.findAllByModifiedAtGreaterThenFetchRole(fromModifiedAt)
+    override fun findAllByModifiedAtGreaterThenFetchRole(afterModifiedAt: LocalDateTime): List<Endpoint> =
+        endpointRepository.findAllByModifiedAtGreaterThenFetchRole(afterModifiedAt)
             .map { endpoint ->
                 val roles: List<Role> = endpoint.roleRelations.map { Role(role = it.role) }
                 Endpoint(endpoint = endpoint, roles = roles)

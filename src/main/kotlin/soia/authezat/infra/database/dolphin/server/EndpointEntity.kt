@@ -6,7 +6,7 @@ import soia.authezat.infra.database.dolphin.base.BaseEntity
 import soia.authezat.infra.database.dolphin.server.enums.EndpointMethod
 
 @Entity
-@Table(name = "servers")
+@Table(name = "endpoints")
 class EndpointEntity(
     @JoinColumn(nullable = false, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)

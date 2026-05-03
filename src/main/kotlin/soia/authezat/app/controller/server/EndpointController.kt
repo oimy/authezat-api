@@ -17,8 +17,8 @@ class EndpointController(
 ) {
 
     @GetMapping("")
-    fun findAllByModifiedAtGreaterThenFetchRole(@RequestParam fromModifiedAt: OffsetDateTime): List<EndpointPayload> =
-        endpointService.findAllByModifiedAtGreaterThenFetchRole(fromModifiedAt = fromModifiedAt.asLocal())
+    fun findAllByModifiedAtGreaterThenFetchRole(@RequestParam afterModifiedAt: OffsetDateTime): List<EndpointPayload> =
+        endpointService.findAllByModifiedAtGreaterThenFetchRole(afterModifiedAt = afterModifiedAt.asLocal())
             .map { endpoint ->
                 val roles: List<RolePayload> = endpoint.roles.map { RolePayload(name = it.name) }
                 EndpointPayload(
