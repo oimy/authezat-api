@@ -4,6 +4,7 @@ import soia.authezat.app.controller.access.payloads.RolePayload
 import soia.authezat.infra.database.dolphin.server.enums.EndpointMethod
 
 data class EndpointPayload(
+    val srl: Long,
     val serverSrl: Long,
     val method: EndpointMethod,
     val path: String,

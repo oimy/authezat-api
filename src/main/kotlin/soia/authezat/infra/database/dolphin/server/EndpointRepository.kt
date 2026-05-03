@@ -8,13 +8,26 @@ interface EndpointRepository : JpaRepository<EndpointEntity, Long> {
 
     fun findAllByServer(server: ServerEntity): List<EndpointEntity>
 
-    @Query("""
+    @Query(
+        """
         select e
         from EndpointEntity e
         LEFT JOIN FETCH e.roleRelations rr 
         LEFT JOIN FETCH rr.role
         where e.modifiedAt > :modifiedAt
-    """)
+    """
+    )
     fun findAllByModifiedAtGreaterThenFetchRole(modifiedAt: LocalDateTime): List<EndpointEntity>
+
+    @Query(
+        """
+        select e
+        from EndpointEntity e
+        LEFT JOIN FETCH e.roleRelations rr 
+        LEFT JOIN FETCH rr.role
+        where e.srl = :srl
+    """
+    )
+    fun findByIdOrNullFetchRole(srl: Long): EndpointEntity?
 
 }

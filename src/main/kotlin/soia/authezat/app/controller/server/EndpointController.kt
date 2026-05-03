@@ -1,9 +1,6 @@
 package soia.authezat.app.controller.server
 
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import soia.authezat.app.controller.access.payloads.RolePayload
 import soia.authezat.app.controller.server.payloads.EndpointPayload
 import soia.authezat.app.utils.asLocal
@@ -22,11 +19,16 @@ class EndpointController(
             .map { endpoint ->
                 val roles: List<RolePayload> = endpoint.roles.map { RolePayload(name = it.name) }
                 EndpointPayload(
+                    srl = endpoint.srl,
                     serverSrl = endpoint.serverSrl,
                     method = endpoint.method,
                     path = endpoint.path,
                     roles = roles
                 )
             }
+
+    @GetMapping("/{srl}/roles")
+    fun getRolesBySrl(@PathVariable srl: Long): List<RolePayload> =
+        endpointService.findBySrlFetchRole(srl).roles.map { RolePayload(name = it.name) }
 
 }

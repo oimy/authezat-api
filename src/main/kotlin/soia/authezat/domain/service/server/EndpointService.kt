@@ -12,4 +12,6 @@ interface EndpointService {
 
     fun findAllByModifiedAtGreaterThenFetchRole(afterModifiedAt: LocalDateTime): List<Endpoint>
 
+    fun findBySrlFetchRole(srl: Long): Endpoint
+
 }

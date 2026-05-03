@@ -45,4 +45,13 @@ class EndpointServiceImpl(
                 Endpoint(endpoint = endpoint, roles = roles)
             }
 
+    @Transactional(readOnly = true)
+    override fun findBySrlFetchRole(srl: Long): Endpoint =
+        endpointRepository.findByIdOrNullFetchRole(srl)
+            ?.let { endpoint ->
+                val roles: List<Role> = endpoint.roleRelations.map { Role(role = it.role) }
+                Endpoint(endpoint = endpoint, roles = roles)
+            }
+            ?: throw EntityNotFoundException()
+
 }
