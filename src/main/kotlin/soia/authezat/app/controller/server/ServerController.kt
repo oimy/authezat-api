@@ -6,6 +6,7 @@ import soia.authezat.app.controller.server.payloads.EndpointSavePayload
 import soia.authezat.app.controller.server.payloads.ServerPayload
 import soia.authezat.domain.service.server.EndpointService
 import soia.authezat.domain.service.server.ServerService
+import soia.authezat.infra.database.configuration.auditor.annotations.AuditCreatedBy
 
 @RestController
 @RequestMapping("/server/servers")
@@ -21,13 +22,14 @@ class ServerController(
         }
 
     @PostMapping("/{srl}/endpoints")
-    fun saveEndpoint(@PathVariable srl: Long, endpointSave: EndpointSavePayload) =
+    @AuditCreatedBy
+    fun saveEndpoint(@PathVariable srl: Long, @RequestBody endpointSave: EndpointSavePayload) =
         endpointService.save(serverSrl = srl, method = endpointSave.method, path = endpointSave.path)
 
     @GetMapping("/{srl}/endpoints")
     fun findAllEndpointsByServerSrl(@PathVariable srl: Long): List<EndpointPayload> =
         endpointService.findAllByServerSrl(srl).map {
-            EndpointPayload(serverSrl = it.serverSrl, method = it.method, path = it.path)
+            EndpointPayload(srl = it.srl, serverSrl = it.serverSrl, method = it.method, path = it.path)
         }
 
 }
