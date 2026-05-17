@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.18.0.2:31336/authezat
-    username: local
+    url: jdbc:mysql://localhost:31336/authezat
+    username: authezat_api
     password: 1234
 
   jpa:
