@@ -17,5 +17,8 @@ class RoleEntity(
 
     @OneToMany(mappedBy = "role", cascade = [CascadeType.ALL], orphanRemoval = true)
     var userRelations: MutableList<RoleUserRelationEntity> = mutableListOf(),
+
+    @OneToMany(mappedBy = "role", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var serverRelations: MutableList<RoleServerRelationEntity> = mutableListOf(),
 ) :
     BaseEntity()

@@ -12,8 +12,8 @@ interface EndpointRepository : JpaRepository<EndpointEntity, Long> {
         """
         select e
         from EndpointEntity e
-        LEFT JOIN FETCH e.roleRelations rr 
-        LEFT JOIN FETCH rr.role
+        left join fetch e.roleRelations rr 
+        left join fetch rr.role
         where e.modifiedAt > :modifiedAt
     """
     )
@@ -23,8 +23,8 @@ interface EndpointRepository : JpaRepository<EndpointEntity, Long> {
         """
         select e
         from EndpointEntity e
-        LEFT JOIN FETCH e.roleRelations rr 
-        LEFT JOIN FETCH rr.role
+        left join fetch e.roleRelations rr 
+        left join fetch rr.role
         where e.srl = :srl
     """
     )

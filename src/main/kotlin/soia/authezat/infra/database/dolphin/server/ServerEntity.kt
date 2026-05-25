@@ -1,6 +1,9 @@
 package soia.authezat.infra.database.dolphin.server
 
 import jakarta.persistence.*
+import soia.authezat.infra.database.dolphin.access.RoleEndpointRelationEntity
+import soia.authezat.infra.database.dolphin.access.RoleEntity
+import soia.authezat.infra.database.dolphin.access.RoleServerRelationEntity
 import soia.authezat.infra.database.dolphin.base.BaseEntity
 
 @Entity
@@ -11,6 +14,9 @@ class ServerEntity(
     var url: String,
 
     var version: Short,
+
+    @OneToMany(mappedBy = "server", cascade = [(CascadeType.ALL)], orphanRemoval = true)
+    var roleRelations: MutableList<RoleServerRelationEntity> = mutableListOf(),
 ) :
     BaseEntity() {
 

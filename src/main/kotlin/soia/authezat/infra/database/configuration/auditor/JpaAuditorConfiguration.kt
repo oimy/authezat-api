@@ -8,7 +8,7 @@ import java.util.*
 
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
-class AuditorConfiguration {
+class JpaAuditorConfiguration {
 
     @Bean
     fun auditorAware(): AuditorAware<String> {
