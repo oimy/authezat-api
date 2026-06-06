@@ -24,12 +24,12 @@ class UserController(
             password = accountSave.password
         )
 
-    @GetMapping("/{srl}")
-    fun findBySrl(@PathVariable srl: Long): UserPayload =
-        UserPayload(name = userService.findBySrl(srl).name)
+    @GetMapping("/{userSrl}")
+    fun findBySrl(@PathVariable userSrl: Long): UserPayload =
+        UserPayload(name = userService.findBySrl(userSrl).name)
 
-    @GetMapping("/{srl}/roles")
-    fun getRolesBySrl(@PathVariable srl: Long): List<RolePayload> =
-        userService.getRolesBySrl(srl).map { RolePayload(name = it.name) }
+    @GetMapping("/{userSrl}/roles")
+    fun getRolesBySrl(@PathVariable userSrl: Long): List<RolePayload> =
+        userService.getRolesBySrl(userSrl).map { RolePayload(srl = userSrl, name = it.name) }
 
 }
