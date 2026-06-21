@@ -4,19 +4,20 @@ import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
+import java.util.UUID
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
 abstract class ImmutableBaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    override val srl: Long = Long.MIN_VALUE
+    override var srl: Long = Long.MIN_VALUE
 ) :
     Entity {
 
     @CreatedBy
     @Column(updatable = false)
-    lateinit var createdBy: String
+    lateinit var createdBy: UUID
 
     lateinit var createdAt: LocalDateTime
 

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional
 import soia.authezat.app.controller.server.payloads.EndpointSavePayload
 import soia.authezat.domain.service.access.values.Role
 import soia.authezat.domain.service.server.values.Endpoint
+import soia.authezat.domain.service.server.values.EndpointDetail
 import soia.authezat.infra.database.dolphin.access.RoleEndpointRelationEntity
 import soia.authezat.infra.database.dolphin.access.RoleEndpointRelationRepository
 import soia.authezat.infra.database.dolphin.access.RoleEntity
@@ -20,6 +21,7 @@ import java.util.*
 @Service(value = "serverEndpointService")
 class EndpointServiceImpl(
     private val endpointRepository: EndpointRepository,
+    private val endpointDetailRepository: EndpointDetailRepository,
     private val serverRepository: ServerRepository,
     private val userRepository: UserRepository,
     private val roleRepository: RoleRepository,
@@ -88,6 +90,11 @@ class EndpointServiceImpl(
                 val roles: List<Role> = endpoint.roleRelations.map { Role(role = it.role) }
                 Endpoint(endpoint = endpoint, roles = roles)
             }
+            ?: throw EntityNotFoundException()
+
+    @Transactional(readOnly = true)
+    override fun getDetail(srl: Long): EndpointDetail =
+        endpointDetailRepository.findByEndpointSrl(srl)?.let { EndpointDetail(it) }
             ?: throw EntityNotFoundException()
 
     @Transactional

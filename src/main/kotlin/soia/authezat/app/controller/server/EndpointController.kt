@@ -3,6 +3,7 @@ package soia.authezat.app.controller.server
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import soia.authezat.app.controller.access.payloads.RolePayload
+import soia.authezat.app.controller.server.payloads.EndpointDetailPayload
 import soia.authezat.domain.service.server.EndpointService
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditCreatedBy
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditDeletedBy
@@ -14,6 +15,21 @@ import java.util.*
 class EndpointController(
     private val endpointService: EndpointService,
 ) {
+
+    @GetMapping("/{endpointSrl}/details")
+    fun getDetails(@PathVariable endpointSrl: Long): EndpointDetailPayload =
+        endpointService.getDetail(endpointSrl).let {
+            EndpointDetailPayload(
+                operationId = it.operationId,
+                summary = it.summary,
+                description = it.description,
+                tags = it.tags,
+                variables = it.variables,
+                parameters = it.parameters,
+                requestBodies = it.requestBodies,
+                responseBodies = it.responseBodies
+            )
+        }
 
     @GetMapping("/{endpointSrl}/roles")
     fun getRolesBySrl(@PathVariable endpointSrl: Long): List<RolePayload> =

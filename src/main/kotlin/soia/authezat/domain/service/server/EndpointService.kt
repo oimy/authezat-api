@@ -2,9 +2,9 @@ package soia.authezat.domain.service.server
 
 import soia.authezat.app.controller.server.payloads.EndpointSavePayload
 import soia.authezat.domain.service.server.values.Endpoint
-import soia.authezat.infra.database.dolphin.server.enums.EndpointMethod
+import soia.authezat.domain.service.server.values.EndpointDetail
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 interface EndpointService {
 
@@ -17,6 +17,8 @@ interface EndpointService {
     fun findAllByModifiedAtGreaterThenFetchRole(afterModifiedAt: LocalDateTime): List<Endpoint>
 
     fun findBySrlFetchRole(srl: Long): Endpoint
+
+    fun getDetail(srl: Long): EndpointDetail
 
     fun addRole(srl: Long, roleSrl: Long, addedBy: UUID)
 

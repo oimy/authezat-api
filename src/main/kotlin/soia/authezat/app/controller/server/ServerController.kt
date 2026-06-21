@@ -20,12 +20,17 @@ class ServerController(
 ) {
 
     @GetMapping
+    fun findAll(): List<ServerPayload> =
+        serverService.findAll()
+            .map { ServerPayload(srl = it.srl, name = it.name, url = it.url, version = it.version) }
+
+    @GetMapping("/self")
     @AuditAccessedBy
-    fun findAll(@Audited accessedBy: UUID): List<ServerPayload> =
+    fun findAllBySelf(@Audited accessedBy: UUID): List<ServerPayload> =
         serverService.findAllByUserId(accessedBy)
             .map { ServerPayload(srl = it.srl, name = it.name, url = it.url, version = it.version) }
 
-    @PostMapping("/{serverSrl}/endpoints")
+    @PostMapping("/{serverSrl}/endpoints/bulk")
     @ResponseStatus(HttpStatus.CREATED)
     @AuditCreatedBy
     fun saveEndpoints(
