@@ -8,7 +8,9 @@ import soia.authezat.infra.database.dolphin.access.RoleEntity
 import soia.authezat.infra.database.dolphin.access.RoleRepository
 import soia.authezat.infra.database.dolphin.access.RoleUserRelationEntity
 import soia.authezat.infra.database.dolphin.access.RoleUserRelationRepository
+import soia.authezat.infra.database.dolphin.account.UserEntity
 import soia.authezat.infra.database.dolphin.account.UserRepository
+import java.util.UUID
 
 @Service
 class RoleServiceImpl(
@@ -19,8 +21,8 @@ class RoleServiceImpl(
     RoleService {
 
     @Transactional
-    override fun save(name: String, createdBy: String) {
-        val user = userRepository.findByUsername(createdBy)
+    override fun save(name: String, createdBy: UUID) {
+        val user: UserEntity = userRepository.findByUserId(createdBy)
             ?: throw EntityNotFoundException()
         val role = RoleEntity(name = name.uppercase())
         val savedRole: RoleEntity = roleRepository.save(role)
@@ -33,7 +35,7 @@ class RoleServiceImpl(
         roleRepository.findAll().map { Role(role = it) }
 
     @Transactional(readOnly = true)
-    override fun findAll(accessedBy: String): List<Role> =
-        roleRepository.findAllByUsername(username = accessedBy).map { Role(role = it) }
+    override fun findAllByUserId(userId: UUID): List<Role> =
+        roleRepository.findAllByUserId(userId).map { Role(role = it) }
 
 }

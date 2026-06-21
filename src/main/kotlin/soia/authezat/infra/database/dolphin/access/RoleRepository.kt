@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import soia.authezat.infra.database.dolphin.account.UserEntity
 import soia.authezat.infra.database.dolphin.server.ServerEntity
+import java.util.UUID
 
 interface RoleRepository : JpaRepository<RoleEntity, Long> {
 
@@ -22,21 +23,18 @@ interface RoleRepository : JpaRepository<RoleEntity, Long> {
         from RoleEntity r
         inner join r.userRelations ur
         inner join ur.user u
-        inner join u.sign s
-        where s.username = :username 
+        where r.srl = :srl 
+          and u.id = :userId
     """)
-    fun existsBySrlAndUsername(srl: Long, username: String): Boolean
+    fun existsBySrlAndUserId(srl: Long, userId: UUID): Boolean
 
     @Query("""
         select r
         from RoleEntity r
         inner join r.userRelations ur
         inner join ur.user u
-        inner join u.sign s
-        where s.username = :username
+        where u.id = :userId
     """)
-    fun findAllByUsername(username: String): List<RoleEntity>
-
-    fun findByName(name: String): RoleEntity?
+    fun findAllByUserId(userId: UUID): List<RoleEntity>
 
 }

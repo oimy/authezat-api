@@ -11,6 +11,7 @@ import soia.authezat.infra.database.dolphin.access.enums.RoleUserAccessType
 import soia.authezat.infra.database.dolphin.account.UserEntity
 import soia.authezat.infra.database.dolphin.account.UserRepository
 import soia.authezat.infra.database.dolphin.base.enums.RequestStatus
+import java.util.*
 
 @Service
 class RoleUserRequestServiceImpl(
@@ -22,10 +23,10 @@ class RoleUserRequestServiceImpl(
     RoleUserRequestService {
 
     @Transactional
-    override fun save(roleSrl: Long, accessType: RoleUserAccessType, content: String, createdBy: String) {
+    override fun save(roleSrl: Long, accessType: RoleUserAccessType, content: String, createdBy: UUID) {
         val roleEntity: RoleEntity = roleRepository.findByIdOrNull(roleSrl)
             ?: throw EntityNotFoundException()
-        val userEntity: UserEntity = userRepository.findByUsername(createdBy)
+        val userEntity: UserEntity = userRepository.findByUserId(createdBy)
             ?: throw EntityNotFoundException()
         val requestEntity = RoleUserRequestEntity(
             role = roleEntity,
@@ -39,17 +40,17 @@ class RoleUserRequestServiceImpl(
     @Transactional(readOnly = true)
     override fun findAllByStatusInAndCreatedBy(
         statuses: Collection<RequestStatus>,
-        accessedBy: String,
+        createdBy: UUID,
     ): List<RoleUserRequest> =
-        roleUserRequestRepository.findAllByStatusInAndCreatedBy(statuses = statuses, username = accessedBy)
+        roleUserRequestRepository.findAllByStatusInAndCreatedBy(statuses = statuses, createdBy = createdBy)
             .map { RoleUserRequest(it) }
 
     @Transactional(readOnly = true)
     override fun findAllByRoleInAndStatusFetchUser(
         status: RequestStatus,
-        accessedBy: String,
+        accessedBy: UUID,
     ): List<RoleUserRequestFetchUser> {
-        val roleEntities: List<RoleEntity> = roleRepository.findAllByUsername(accessedBy)
+        val roleEntities: List<RoleEntity> = roleRepository.findAllByUserId(accessedBy)
         if (roleEntities.isEmpty()) {
             return emptyList()
         }
@@ -59,10 +60,10 @@ class RoleUserRequestServiceImpl(
     }
 
     @Transactional
-    override fun accept(requestSrl: Long, acceptedBy: String) {
+    override fun accept(requestSrl: Long, acceptedBy: UUID) {
         val requestEntity = roleUserRequestRepository.findByIdOrNull(requestSrl)
             ?: throw EntityNotFoundException()
-        require(roleRepository.existsBySrlAndUsername(requestEntity.role.srl, acceptedBy))
+        require(roleRepository.existsBySrlAndUserId(srl = requestEntity.role.srl, userId = acceptedBy))
 
         val roleUserRelationEntity = RoleUserRelationEntity(role = requestEntity.role, user = requestEntity.user)
         roleUserRelationRepository.save(roleUserRelationEntity)
@@ -70,19 +71,19 @@ class RoleUserRequestServiceImpl(
     }
 
     @Transactional
-    override fun reject(requestSrl: Long, reason: String, rejectedBy: String) {
+    override fun reject(requestSrl: Long, reason: String, rejectedBy: UUID) {
         val requestEntity = roleUserRequestRepository.findByIdOrNull(requestSrl)
             ?: throw EntityNotFoundException()
-        require(roleRepository.existsBySrlAndUsername(requestEntity.role.srl, rejectedBy))
+        require(roleRepository.existsBySrlAndUserId(srl = requestEntity.role.srl, userId = rejectedBy))
 
         requestEntity.reject(reason)
     }
 
     @Transactional
-    override fun delete(requestSrl: Long, deletedBy: String) {
+    override fun delete(requestSrl: Long, deletedBy: UUID) {
         val requestEntity = roleUserRequestRepository.findByIdOrNull(requestSrl)
             ?: throw EntityNotFoundException()
-        require(roleRepository.existsBySrlAndUsername(requestEntity.role.srl, deletedBy))
+        require(roleRepository.existsBySrlAndUserId(srl = requestEntity.role.srl, userId = deletedBy))
         require(requestEntity.status != RequestStatus.APPROVE) { "can't delete request which is already approved" }
 
         roleUserRequestRepository.delete(requestEntity)

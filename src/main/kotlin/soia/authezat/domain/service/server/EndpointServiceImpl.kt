@@ -13,11 +13,9 @@ import soia.authezat.infra.database.dolphin.access.RoleEntity
 import soia.authezat.infra.database.dolphin.access.RoleRepository
 import soia.authezat.infra.database.dolphin.account.UserEntity
 import soia.authezat.infra.database.dolphin.account.UserRepository
-import soia.authezat.infra.database.dolphin.server.EndpointEntity
-import soia.authezat.infra.database.dolphin.server.EndpointRepository
-import soia.authezat.infra.database.dolphin.server.ServerEntity
-import soia.authezat.infra.database.dolphin.server.ServerRepository
+import soia.authezat.infra.database.dolphin.server.*
 import java.time.LocalDateTime
+import java.util.*
 
 @Service(value = "serverEndpointService")
 class EndpointServiceImpl(
@@ -30,21 +28,43 @@ class EndpointServiceImpl(
     EndpointService {
 
     @Transactional
-    override fun saveAll(serverSrl: Long, endpointSaves: List<EndpointSavePayload>, createdBy: String) {
-        val userEntity: UserEntity = userRepository.findByUsername(createdBy)
+    override fun saveAll(serverSrl: Long, endpointSaves: List<EndpointSavePayload>, createdBy: UUID) {
+        val userEntity: UserEntity = userRepository.findByUserId(createdBy)
             ?: throw EntityNotFoundException()
         val serverEntity: ServerEntity = serverRepository.findByIdOrNull(serverSrl)
             ?: throw EntityNotFoundException()
         require(roleRepository.existsByUserAndServer(user = userEntity, server = serverEntity))
 
         val endpointEntities: List<EndpointEntity> = endpointSaves
-            .map { EndpointEntity(server = serverEntity, method = it.method, path = it.path, content = it.content) }
+            .map {
+                val endpointEntity = EndpointEntity(server = serverEntity, method = it.method, path = it.path)
+                endpointEntity.detail = EndpointDetailEntity(
+                    endpoint = endpointEntity,
+                    tags = it.detail.tags,
+                    operationId = it.detail.operationId,
+                    summary = it.detail.summary,
+                    description = it.detail.description,
+                    variables = it.detail.variables,
+                    parameters = it.detail.parameters,
+                    requestBodies = it.detail.requestBodies,
+                    responseBodies = it.detail.responseBodies
+                )
+                endpointEntity
+            }
         endpointRepository.saveAll(endpointEntities)
     }
 
     @Transactional(readOnly = true)
-    override fun findAllByServerSrl(serverSrl: Long, accessedBy: String): List<Endpoint> {
-        val userEntity: UserEntity = userRepository.findByUsername(accessedBy)
+    override fun findAllByServerSrl(serverSrl: Long): List<Endpoint> {
+        val serverEntity: ServerEntity = serverRepository.findByIdOrNull(serverSrl)
+            ?: throw EntityNotFoundException()
+
+        return endpointRepository.findAllByServer(serverEntity).map { Endpoint(endpoint = it) }
+    }
+
+    @Transactional(readOnly = true)
+    override fun findAllByServerSrlAndUserId(serverSrl: Long, userId: UUID): List<Endpoint> {
+        val userEntity: UserEntity = userRepository.findByUserId(userId)
             ?: throw EntityNotFoundException()
         val serverEntity: ServerEntity = serverRepository.findByIdOrNull(serverSrl)
             ?: throw EntityNotFoundException()
@@ -71,8 +91,8 @@ class EndpointServiceImpl(
             ?: throw EntityNotFoundException()
 
     @Transactional
-    override fun addRole(srl: Long, roleSrl: Long, addedBy: String) {
-        require(roleRepository.existsBySrlAndUsername(srl = roleSrl, username = addedBy))
+    override fun addRole(srl: Long, roleSrl: Long, addedBy: UUID) {
+        require(roleRepository.existsBySrlAndUserId(srl = roleSrl, userId = addedBy))
 
         val endpointEntity: EndpointEntity = endpointRepository.findByIdOrNull(srl)
             ?: throw EntityNotFoundException()
@@ -83,8 +103,8 @@ class EndpointServiceImpl(
     }
 
     @Transactional
-    override fun removeRole(srl: Long, roleSrl: Long, removedBy: String) {
-        require(roleRepository.existsBySrlAndUsername(srl = roleSrl, username = removedBy))
+    override fun removeRole(srl: Long, roleSrl: Long, removedBy: UUID) {
+        require(roleRepository.existsBySrlAndUserId(srl = roleSrl, userId = removedBy))
 
         val relationEntity: RoleEndpointRelationEntity = roleEndpointRelationRepository
             .findByRoleSrlAndEndpointSrl(roleSrl = roleSrl, endpointSrl = srl)

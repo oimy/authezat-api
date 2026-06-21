@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query
 
 interface SignRepository : JpaRepository<SignEntity, Long> {
 
+    fun findByUsername(username: String): SignEntity?
+
     @Query("SELECT s FROM SignEntity s JOIN FETCH s.user WHERE s.username = :username AND s.password = :password")
     fun findByUsernameAndPassword(username: String, password: String): SignEntity?
 

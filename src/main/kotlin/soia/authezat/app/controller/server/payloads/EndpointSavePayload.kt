@@ -5,5 +5,5 @@ import soia.authezat.infra.database.dolphin.server.enums.EndpointMethod
 data class EndpointSavePayload(
     val method: EndpointMethod,
     val path: String,
-    val content: Map<String, Any>
+    val detail: EndpointDetailSavePayload
 )

@@ -30,8 +30,4 @@ class UserController(
     fun findBySrl(@PathVariable userSrl: Long): UserPayload =
         UserPayload(name = userService.findBySrl(userSrl).name)
 
-    @GetMapping("/{userSrl}/roles")
-    fun getRolesBySrl(@PathVariable userSrl: Long): List<RolePayload> =
-        userService.getRolesBySrl(userSrl).map { RolePayload(srl = userSrl, name = it.name) }
-
 }

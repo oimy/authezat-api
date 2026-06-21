@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 data class User(
+    val id: UUID,
     val name: String,
     val email: String,
 
@@ -18,6 +19,7 @@ data class User(
     BaseValue {
 
     constructor(user: UserEntity) : this(
+        id = user.id,
         name = user.name,
         email = user.email,
         srl = user.srl,

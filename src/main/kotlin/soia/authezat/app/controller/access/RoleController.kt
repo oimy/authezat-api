@@ -8,6 +8,7 @@ import soia.authezat.domain.service.access.RoleService
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditAccessedBy
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditCreatedBy
 import soia.authezat.infra.database.configuration.auditor.annotations.Audited
+import java.util.*
 
 @RestController
 @RequestMapping("/access/roles")
@@ -18,7 +19,7 @@ class RoleController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @AuditCreatedBy
-    fun save(@RequestBody roleSave: RoleSavePayload, @Audited createdBy: String) =
+    fun save(@RequestBody roleSave: RoleSavePayload, @Audited createdBy: UUID) =
         roleService.save(name = roleSave.name, createdBy = createdBy)
 
     @GetMapping
@@ -27,7 +28,7 @@ class RoleController(
 
     @GetMapping("/self")
     @AuditAccessedBy
-    fun findAllByAccessedBy(@Audited accessedBy: String) =
-        roleService.findAll(accessedBy = accessedBy).map { RolePayload(srl = it.srl, name = it.name) }
+    fun findAllByAccessedBy(@Audited accessedBy: UUID) =
+        roleService.findAllByUserId(userId = accessedBy).map { RolePayload(srl = it.srl, name = it.name) }
 
 }

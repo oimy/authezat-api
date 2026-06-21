@@ -9,6 +9,7 @@ import soia.authezat.app.controller.access.payloads.RoleUserRequestSavePayload
 import soia.authezat.domain.service.access.RoleUserRequestService
 import soia.authezat.infra.database.configuration.auditor.annotations.*
 import soia.authezat.infra.database.dolphin.base.enums.RequestStatus
+import java.util.*
 
 @RestController
 @RequestMapping("/access/roles")
@@ -23,7 +24,7 @@ class RoleUserRequestController(
     fun save(
         @PathVariable roleSrl: Long,
         @RequestBody roleSave: RoleUserRequestSavePayload,
-        @Audited createdBy: String,
+        @Audited createdBy: UUID,
     ) =
         roleUserRequestService.save(
             roleSrl = roleSrl,
@@ -36,9 +37,9 @@ class RoleUserRequestController(
     @AuditAccessedBy
     fun getOutboundRequests(
         @RequestParam statuses: Set<RequestStatus>,
-        @Audited accessedBy: String,
+        @Audited accessedBy: UUID,
     ): List<RoleUserRequestPayload> =
-        roleUserRequestService.findAllByStatusInAndCreatedBy(statuses = statuses, accessedBy = accessedBy)
+        roleUserRequestService.findAllByStatusInAndCreatedBy(statuses = statuses, createdBy = accessedBy)
             .map {
                 RoleUserRequestPayload(
                     srl = it.srl,
@@ -54,7 +55,7 @@ class RoleUserRequestController(
     @AuditAccessedBy
     fun getInboundRequests(
         @RequestParam status: RequestStatus,
-        @Audited accessedBy: String,
+        @Audited accessedBy: UUID,
     ): List<RoleUserRequestFetchUserPayload> =
         roleUserRequestService.findAllByRoleInAndStatusFetchUser(status = status, accessedBy = accessedBy)
             .map {
@@ -73,7 +74,7 @@ class RoleUserRequestController(
     @AuditModifiedBy
     fun accept(
         @PathVariable requestSrl: Long,
-        @Audited acceptedBy: String,
+        @Audited acceptedBy: UUID,
     ) =
         roleUserRequestService.accept(requestSrl = requestSrl, acceptedBy = acceptedBy)
 
@@ -82,7 +83,7 @@ class RoleUserRequestController(
     fun reject(
         @PathVariable requestSrl: Long,
         @RequestParam reason: String,
-        @Audited rejectedBy: String,
+        @Audited rejectedBy: UUID,
     ) =
         roleUserRequestService.reject(requestSrl = requestSrl, reason = reason, rejectedBy = rejectedBy)
 
@@ -90,7 +91,7 @@ class RoleUserRequestController(
     @AuditDeletedBy
     fun delete(
         @PathVariable requestSrl: Long,
-        @Audited deletedBy: String,
+        @Audited deletedBy: UUID,
     ) =
         roleUserRequestService.delete(requestSrl = requestSrl, deletedBy = deletedBy)
 

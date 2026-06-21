@@ -4,16 +4,12 @@ import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import soia.authezat.domain.service.server.values.Server
-import soia.authezat.infra.database.dolphin.access.RoleEntity
-import soia.authezat.infra.database.dolphin.access.RoleRepository
-import soia.authezat.infra.database.dolphin.access.RoleServerRelationEntity
-import soia.authezat.infra.database.dolphin.access.RoleServerRelationRepository
-import soia.authezat.infra.database.dolphin.access.RoleUserRelationEntity
-import soia.authezat.infra.database.dolphin.access.RoleUserRelationRepository
+import soia.authezat.infra.database.dolphin.access.*
 import soia.authezat.infra.database.dolphin.account.UserEntity
 import soia.authezat.infra.database.dolphin.account.UserRepository
 import soia.authezat.infra.database.dolphin.server.ServerEntity
 import soia.authezat.infra.database.dolphin.server.ServerRepository
+import java.util.*
 
 @Service(value = "serverService")
 class ServerServiceImpl(
@@ -26,8 +22,8 @@ class ServerServiceImpl(
     ServerService {
 
     @Transactional
-    override fun save(name: String, url: String, version: Short, createdBy: String) {
-        val user: UserEntity = userRepository.findByUsername(createdBy)
+    override fun save(name: String, url: String, version: Short, createdBy: UUID) {
+        val user: UserEntity = userRepository.findByUserId(createdBy)
             ?: throw EntityNotFoundException("user not found")
         val serverRoleName = name.uppercase() + "_SERVER"
         val roleEntity = RoleEntity(name = serverRoleName)
@@ -48,10 +44,7 @@ class ServerServiceImpl(
         serverRepository.findAll().map { Server(server = it) }
 
     @Transactional(readOnly = true)
-    override fun findAll(accessedBy: String): List<Server> {
-        val user: UserEntity = userRepository.findByUsername(accessedBy)
-            ?: throw EntityNotFoundException()
-        return serverRepository.findAllByUserSrl(user.srl).map { Server(server = it) }
-    }
+    override fun findAllByUserId(userId: UUID): List<Server> =
+        serverRepository.findAllByUserId(userId).map { Server(server = it) }
 
 }

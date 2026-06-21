@@ -1,4 +1,4 @@
-package soia.authezat.app.controller.session.payloads
+package soia.authezat.app.controller.client.payloads
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size

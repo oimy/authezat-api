@@ -10,6 +10,7 @@ import soia.authezat.domain.service.server.ServerService
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditAccessedBy
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditCreatedBy
 import soia.authezat.infra.database.configuration.auditor.annotations.Audited
+import java.util.*
 
 @RestController
 @RequestMapping("/server/servers")
@@ -20,8 +21,8 @@ class ServerController(
 
     @GetMapping
     @AuditAccessedBy
-    fun findAll(@Audited accessedBy: String): List<ServerPayload> =
-        serverService.findAll(accessedBy)
+    fun findAll(@Audited accessedBy: UUID): List<ServerPayload> =
+        serverService.findAllByUserId(accessedBy)
             .map { ServerPayload(srl = it.srl, name = it.name, url = it.url, version = it.version) }
 
     @PostMapping("/{serverSrl}/endpoints")
@@ -30,14 +31,14 @@ class ServerController(
     fun saveEndpoints(
         @PathVariable serverSrl: Long,
         @RequestBody endpointSaves: List<EndpointSavePayload>,
-        @Audited createdBy: String,
+        @Audited createdBy: UUID,
     ) =
         endpointService.saveAll(serverSrl = serverSrl, endpointSaves = endpointSaves, createdBy = createdBy)
 
     @GetMapping("/{serverSrl}/endpoints")
     @AuditAccessedBy
-    fun findAllEndpointsByServerSrl(@PathVariable serverSrl: Long, @Audited accessedBy: String): List<EndpointPayload> =
-        endpointService.findAllByServerSrl(serverSrl, accessedBy = accessedBy).map {
+    fun findAllEndpointsByServerSrl(@PathVariable serverSrl: Long, @Audited accessedBy: UUID): List<EndpointPayload> =
+        endpointService.findAllByServerSrlAndUserId(serverSrl = serverSrl, userId = accessedBy).map {
             EndpointPayload(
                 srl = it.srl,
                 serverSrl = it.serverSrl,
