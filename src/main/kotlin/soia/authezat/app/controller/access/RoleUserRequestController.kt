@@ -1,5 +1,6 @@
 package soia.authezat.app.controller.access
 
+import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import soia.authezat.app.controller.access.payloads.RoleUserRequestFetchUserPayload
@@ -17,6 +18,7 @@ class RoleUserRequestController(
 ) {
 
     @PostMapping("/{roleSrl}/requests")
+    @ResponseStatus(HttpStatus.CREATED)
     @AuditCreatedBy
     fun save(
         @PathVariable roleSrl: Long,

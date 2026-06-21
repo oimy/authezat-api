@@ -1,6 +1,7 @@
 package soia.authezat.app.controller.account
 
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import soia.authezat.app.controller.access.payloads.RolePayload
 import soia.authezat.app.controller.account.payloads.AccountSavePayload
@@ -14,7 +15,8 @@ class UserController(
     private val userService: UserService,
 ) {
 
-    @PostMapping("")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @AuditCreatedBy
     fun save(@RequestBody @Valid accountSave: AccountSavePayload) =
         userService.save(

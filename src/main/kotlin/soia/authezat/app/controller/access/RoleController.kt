@@ -1,5 +1,6 @@
 package soia.authezat.app.controller.access
 
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import soia.authezat.app.controller.access.payloads.RolePayload
 import soia.authezat.app.controller.access.payloads.RoleSavePayload
@@ -15,6 +16,7 @@ class RoleController(
 ) {
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @AuditCreatedBy
     fun save(@RequestBody roleSave: RoleSavePayload, @Audited createdBy: String) =
         roleService.save(name = roleSave.name, createdBy = createdBy)

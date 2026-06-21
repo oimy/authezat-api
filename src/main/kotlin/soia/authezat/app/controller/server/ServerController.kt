@@ -1,5 +1,6 @@
 package soia.authezat.app.controller.server
 
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import soia.authezat.app.controller.server.payloads.EndpointPayload
 import soia.authezat.app.controller.server.payloads.EndpointSavePayload
@@ -24,6 +25,7 @@ class ServerController(
             .map { ServerPayload(srl = it.srl, name = it.name, url = it.url, version = it.version) }
 
     @PostMapping("/{serverSrl}/endpoints")
+    @ResponseStatus(HttpStatus.CREATED)
     @AuditCreatedBy
     fun saveEndpoints(
         @PathVariable serverSrl: Long,

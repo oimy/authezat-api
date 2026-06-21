@@ -2,6 +2,7 @@ package soia.authezat.domain.service.account
 
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import soia.authezat.domain.service.access.values.Role
@@ -15,12 +16,16 @@ import soia.authezat.infra.database.dolphin.account.UserRepository
 class UserServiceImpl(
     private val userRepository: UserRepository,
     private val signRepository: SignRepository,
+    private val passwordEncoder: PasswordEncoder,
 ) :
     UserService {
 
     @Transactional
     override fun save(name: String, email: String, username: String, password: String) {
-        val signEntity = SignEntity(username = username, password = password)
+        val encryptPassword: String = passwordEncoder.encode(password)
+            ?: throw IllegalArgumentException()
+
+        val signEntity = SignEntity(username = username, password = encryptPassword)
         val userEntity = UserEntity(sign = signEntity, name = name, email = email)
         signEntity.user = userEntity
         userRepository.save(userEntity)
@@ -28,10 +33,12 @@ class UserServiceImpl(
 
     @Transactional(readOnly = true)
     override fun getByUsernameAndPassword(username: String, password: String): User {
-        val signEntity: SignEntity = signRepository.findByUsernameAndPassword(username = username, password = password)
+        val signEntity: SignEntity = signRepository.findByUsername(username = username)
             ?: throw EntityNotFoundException()
+        require(passwordEncoder.matches(password, signEntity.password))
 
-        return User(signEntity.user)
+        return userRepository.findBySignSrl(signEntity.srl)?.let { User(it) }
+            ?: throw EntityNotFoundException()
     }
 
     @Transactional(readOnly = true)

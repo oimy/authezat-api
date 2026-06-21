@@ -1,11 +1,12 @@
 package soia.authezat.domain.service.base
 
 import java.time.LocalDateTime
+import java.util.*
 
 interface BaseValue {
     val srl: Long
-    val createdBy: String
+    val createdBy: UUID
     val createdAt: LocalDateTime
-    val modifiedBy: String
+    val modifiedBy: UUID
     val modifiedAt: LocalDateTime
 }

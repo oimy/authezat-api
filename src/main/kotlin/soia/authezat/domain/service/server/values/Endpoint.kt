@@ -5,6 +5,7 @@ import soia.authezat.domain.service.base.BaseValue
 import soia.authezat.infra.database.dolphin.server.EndpointEntity
 import soia.authezat.infra.database.dolphin.server.enums.EndpointMethod
 import java.time.LocalDateTime
+import java.util.*
 
 data class Endpoint(
     val serverSrl: Long,
@@ -13,9 +14,9 @@ data class Endpoint(
     val roles: List<Role> = emptyList(),
 
     override val srl: Long,
-    override val createdBy: String,
+    override val createdBy: UUID,
     override val createdAt: LocalDateTime,
-    override val modifiedBy: String,
+    override val modifiedBy: UUID,
     override val modifiedAt: LocalDateTime,
 ) :
     BaseValue {

@@ -5,6 +5,7 @@ import soia.authezat.infra.database.dolphin.access.RoleUserRequestEntity
 import soia.authezat.infra.database.dolphin.access.enums.RoleUserAccessType
 import soia.authezat.infra.database.dolphin.base.enums.RequestStatus
 import java.time.LocalDateTime
+import java.util.*
 
 data class RoleUserRequest(
     val roleSrl: Long,
@@ -15,9 +16,9 @@ data class RoleUserRequest(
     val reason: String?,
 
     override val srl: Long,
-    override val createdBy: String,
+    override val createdBy: UUID,
     override val createdAt: LocalDateTime,
-    override val modifiedBy: String,
+    override val modifiedBy: UUID,
     override val modifiedAt: LocalDateTime,
 ) :
     BaseValue {

@@ -3,6 +3,7 @@ package soia.authezat.domain.service.session.values
 import soia.authezat.domain.service.base.BaseValue
 import soia.authezat.infra.database.dolphin.session.SessionEntity
 import java.time.LocalDateTime
+import java.util.*
 
 data class Session(
     val userSrl: Long,
@@ -10,9 +11,9 @@ data class Session(
     val expiredAt: LocalDateTime,
 
     override val srl: Long,
-    override val createdBy: String,
+    override val createdBy: UUID,
     override val createdAt: LocalDateTime,
-    override val modifiedBy: String,
+    override val modifiedBy: UUID,
     override val modifiedAt: LocalDateTime,
 ) :
     BaseValue {

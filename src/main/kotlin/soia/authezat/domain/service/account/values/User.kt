@@ -3,15 +3,16 @@ package soia.authezat.domain.service.account.values
 import soia.authezat.domain.service.base.BaseValue
 import soia.authezat.infra.database.dolphin.account.UserEntity
 import java.time.LocalDateTime
+import java.util.*
 
 data class User(
     val name: String,
     val email: String,
 
     override val srl: Long,
-    override val createdBy: String,
+    override val createdBy: UUID,
     override val createdAt: LocalDateTime,
-    override val modifiedBy: String,
+    override val modifiedBy: UUID,
     override val modifiedAt: LocalDateTime,
 ) :
     BaseValue {

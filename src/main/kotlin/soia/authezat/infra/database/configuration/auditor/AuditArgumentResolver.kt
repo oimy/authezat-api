@@ -7,12 +7,10 @@ import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 import soia.authezat.infra.database.configuration.auditor.annotations.Audited
+import java.util.*
 
 @Component
 class AuditArgumentResolver : HandlerMethodArgumentResolver {
-    companion object {
-        private const val UNKNOWN = "unknown"
-    }
 
     override fun supportsParameter(parameter: MethodParameter): Boolean =
         parameter.hasParameterAnnotation(Audited::class.java)
@@ -23,8 +21,8 @@ class AuditArgumentResolver : HandlerMethodArgumentResolver {
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
-    ): String {
-        return AuditorContextHolder.getAuditor() ?: UNKNOWN;
+    ): UUID? {
+        return AuditorContextHolder.getAuditor();
     }
 
 }

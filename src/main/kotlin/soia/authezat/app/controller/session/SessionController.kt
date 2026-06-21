@@ -1,5 +1,6 @@
 package soia.authezat.app.controller.session
 
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import soia.authezat.app.controller.session.payloads.SessionPayload
 import soia.authezat.app.controller.session.payloads.SessionSavePayload
@@ -25,6 +26,7 @@ class SessionController(
     }
 
     @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     @AuditCreatedBy
     fun clearAndSave(@RequestBody sessionSave: SessionSavePayload): SessionPayload {
         val user: User = userService.getByUsernameAndPassword(

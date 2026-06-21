@@ -5,22 +5,23 @@ import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
+import java.util.*
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
 abstract class BaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    override val srl: Long = 0L,
+    override var srl: Long = 0L,
 ) :
     Entity {
 
     @CreatedBy
     @Column(updatable = false)
-    lateinit var createdBy: String
+    lateinit var createdBy: UUID
 
     @LastModifiedBy
-    lateinit var modifiedBy: String
+    lateinit var modifiedBy: UUID
 
     lateinit var createdAt: LocalDateTime
     lateinit var modifiedAt: LocalDateTime

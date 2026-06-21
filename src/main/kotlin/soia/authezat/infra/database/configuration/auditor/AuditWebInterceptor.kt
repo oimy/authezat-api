@@ -12,6 +12,7 @@ import soia.authezat.infra.database.configuration.auditor.annotations.AuditAcces
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditCreatedBy
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditDeletedBy
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditModifiedBy
+import java.util.*
 import kotlin.reflect.KClass
 
 @Aspect
@@ -56,8 +57,9 @@ class AuditWebInterceptor : HandlerInterceptor {
         require(headerName.isNotBlank()) { "headerName cannot be blank" }
 
         val request: HttpServletRequest = getServletRequest()
-        val createdBy = request.getAuditedBy(headerName = headerName, required = required)
-        AuditorContextHolder.setAuditor(auditor = createdBy)
+        val auditedBy: String = request.getAuditedBy(headerName = headerName, required = required)
+        val auditedUuid: UUID = UUID.fromString(auditedBy)
+        AuditorContextHolder.setAuditor(auditor = auditedUuid)
     }
 
     private fun HttpServletRequest.getAuditedBy(headerName: String, required: Boolean): String =

@@ -11,9 +11,9 @@ import java.util.*
 class AuditorConfiguration {
 
     @Bean
-    fun auditorAware(): AuditorAware<String> {
+    fun auditorAware(): AuditorAware<UUID> {
         return AuditorAware {
-            val auditor: String? = AuditorContextHolder.getAuditor()
+            val auditor: UUID? = AuditorContextHolder.getAuditor()
             Optional.ofNullable(auditor)
         }
     }

@@ -11,6 +11,7 @@ import soia.authezat.infra.database.configuration.auditor.annotations.AuditAcces
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditCreatedBy
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditDeletedBy
 import soia.authezat.infra.database.configuration.auditor.annotations.AuditModifiedBy
+import java.util.*
 
 @Aspect
 @Component
@@ -36,9 +37,10 @@ class AuditorAspect {
         require(headerName.isNotBlank()) { "headerName cannot be blank" }
 
         val request: HttpServletRequest = getServletRequest()
-        val createdBy = request.getAuditedBy(headerName = headerName, required = required)
+        val auditedBy: String = request.getAuditedBy(headerName = headerName, required = required)
+        val auditedUuid: UUID = UUID.fromString(auditedBy)
         try {
-            AuditorContextHolder.setAuditor(auditor = createdBy)
+            AuditorContextHolder.setAuditor(auditor = auditedUuid)
             return joinPoint.proceed()
         } finally {
             AuditorContextHolder.clear()

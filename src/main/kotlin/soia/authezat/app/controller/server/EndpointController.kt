@@ -1,5 +1,6 @@
 package soia.authezat.app.controller.server
 
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import soia.authezat.app.controller.access.payloads.RolePayload
 import soia.authezat.app.controller.server.payloads.EndpointPayload
@@ -35,11 +36,13 @@ class EndpointController(
         endpointService.findBySrlFetchRole(endpointSrl).roles.map { RolePayload(srl = it.srl, name = it.name) }
 
     @PostMapping("/{endpointSrl}/roles/{roleSrl}")
+    @ResponseStatus(HttpStatus.CREATED)
     @AuditCreatedBy
     fun addRole(@PathVariable endpointSrl: Long, @PathVariable roleSrl: Long, @Audited addedBy: String) =
         endpointService.addRole(srl = endpointSrl, roleSrl = roleSrl, addedBy = addedBy)
 
     @DeleteMapping("/{endpointSrl}/roles/{roleSrl}")
+    @ResponseStatus(HttpStatus.CREATED)
     @AuditDeletedBy
     fun removeRole(@PathVariable endpointSrl: Long, @PathVariable roleSrl: Long, @Audited removedBy: String) =
         endpointService.removeRole(srl = endpointSrl, roleSrl = roleSrl, removedBy = removedBy)
