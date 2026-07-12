@@ -2,7 +2,9 @@ package soia.authezat.app.controller.server
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import soia.authezat.app.controller.server.payloads.EndpointPayload
+import soia.authezat.app.controller.access.payloads.RolePayload
+import soia.authezat.app.controller.server.payloads.EndpointDetailPayload
+import soia.authezat.app.controller.server.payloads.EndpointPayloadFetchRoleAndDetail
 import soia.authezat.app.controller.server.payloads.EndpointSavePayload
 import soia.authezat.app.controller.server.payloads.ServerPayload
 import soia.authezat.domain.service.server.EndpointService
@@ -42,13 +44,28 @@ class ServerController(
 
     @GetMapping("/{serverSrl}/endpoints")
     @AuditAccessedBy
-    fun findAllEndpointsByServerSrl(@PathVariable serverSrl: Long, @Audited accessedBy: UUID): List<EndpointPayload> =
-        endpointService.findAllByServerSrlAndUserId(serverSrl = serverSrl, userId = accessedBy).map {
-            EndpointPayload(
+    fun findAllEndpointsByServerSrl(@PathVariable serverSrl: Long, @Audited accessedBy: UUID): List<EndpointPayloadFetchRoleAndDetail> =
+        endpointService.findAllByServerSrlAndUserIdFetchRolesAndDetail(serverSrl = serverSrl, userId = accessedBy).map {
+            val roles: List<RolePayload> = it.roles.map { role -> RolePayload(srl = role.srl, name = role.name) }
+            val detail = it.detail.let { detail ->
+                EndpointDetailPayload(
+                    operationId = detail.operationId,
+                    summary = detail.summary,
+                    description = detail.description,
+                    tags = detail.tags,
+                    variables = detail.variables,
+                    parameters = detail.parameters,
+                    requestBodies = detail.requestBodies,
+                    responseBodies = detail.responseBodies,
+                )
+            }
+            EndpointPayloadFetchRoleAndDetail(
                 srl = it.srl,
                 serverSrl = it.serverSrl,
                 method = it.method,
-                path = it.path
+                path = it.path,
+                roles = roles,
+                detail = detail,
             )
         }
 

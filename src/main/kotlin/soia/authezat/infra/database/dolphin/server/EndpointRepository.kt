@@ -3,6 +3,7 @@ package soia.authezat.infra.database.dolphin.server
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
+import java.util.UUID
 
 interface EndpointRepository : JpaRepository<EndpointEntity, Long> {
 
@@ -29,5 +30,15 @@ interface EndpointRepository : JpaRepository<EndpointEntity, Long> {
     """
     )
     fun findByIdOrNullFetchRole(srl: Long): EndpointEntity?
+
+    @Query("""
+        select e 
+        from EndpointEntity e
+        left join fetch e.roleRelations rr 
+        left join fetch rr.role
+        inner join fetch e.detail
+        where e.server.srl = :serverSrl
+    """)
+    fun findAllByServerSrlFetchRolesAndDetail(serverSrl: Long): List<EndpointEntity>
 
 }

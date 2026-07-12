@@ -8,12 +8,11 @@ import soia.authezat.app.controller.server.payloads.EndpointSavePayload
 import soia.authezat.domain.service.access.values.Role
 import soia.authezat.domain.service.server.values.Endpoint
 import soia.authezat.domain.service.server.values.EndpointDetail
+import soia.authezat.domain.service.server.values.EndpointFetchRoleAndDetail
 import soia.authezat.infra.database.dolphin.access.RoleEndpointRelationEntity
 import soia.authezat.infra.database.dolphin.access.RoleEndpointRelationRepository
 import soia.authezat.infra.database.dolphin.access.RoleEntity
 import soia.authezat.infra.database.dolphin.access.RoleRepository
-import soia.authezat.infra.database.dolphin.account.UserEntity
-import soia.authezat.infra.database.dolphin.account.UserRepository
 import soia.authezat.infra.database.dolphin.server.*
 import java.time.LocalDateTime
 import java.util.*
@@ -23,7 +22,6 @@ class EndpointServiceImpl(
     private val endpointRepository: EndpointRepository,
     private val endpointDetailRepository: EndpointDetailRepository,
     private val serverRepository: ServerRepository,
-    private val userRepository: UserRepository,
     private val roleRepository: RoleRepository,
     private val roleEndpointRelationRepository: RoleEndpointRelationRepository,
 ) :
@@ -31,12 +29,10 @@ class EndpointServiceImpl(
 
     @Transactional
     override fun saveAll(serverSrl: Long, endpointSaves: List<EndpointSavePayload>, createdBy: UUID) {
-        val userEntity: UserEntity = userRepository.findByUserId(createdBy)
-            ?: throw EntityNotFoundException()
+        require(roleRepository.existsByUserIdAndServerSrl(userId = createdBy, serverSrl = serverSrl))
+
         val serverEntity: ServerEntity = serverRepository.findByIdOrNull(serverSrl)
             ?: throw EntityNotFoundException()
-        require(roleRepository.existsByUserAndServer(user = userEntity, server = serverEntity))
-
         val endpointEntities: List<EndpointEntity> = endpointSaves
             .map {
                 val endpointEntity = EndpointEntity(server = serverEntity, method = it.method, path = it.path)
@@ -65,14 +61,18 @@ class EndpointServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun findAllByServerSrlAndUserId(serverSrl: Long, userId: UUID): List<Endpoint> {
-        val userEntity: UserEntity = userRepository.findByUserId(userId)
-            ?: throw EntityNotFoundException()
-        val serverEntity: ServerEntity = serverRepository.findByIdOrNull(serverSrl)
-            ?: throw EntityNotFoundException()
-        require(roleRepository.existsByUserAndServer(user = userEntity, server = serverEntity))
+    override fun findAllByServerSrlAndUserIdFetchRolesAndDetail(
+        serverSrl: Long,
+        userId: UUID,
+    ): List<EndpointFetchRoleAndDetail> {
+        require(roleRepository.existsByUserIdAndServerSrl(userId = userId, serverSrl = serverSrl))
 
-        return endpointRepository.findAllByServer(serverEntity).map { Endpoint(endpoint = it) }
+        return endpointRepository.findAllByServerSrlFetchRolesAndDetail(serverSrl)
+            .map {
+                val roles: List<Role> = it.roleRelations.map { roleRelation -> Role(role = roleRelation.role) }
+                val detail = EndpointDetail(it.detail)
+                EndpointFetchRoleAndDetail(endpoint = it, roles = roles, detail = detail)
+            }
     }
 
     @Transactional(readOnly = true)

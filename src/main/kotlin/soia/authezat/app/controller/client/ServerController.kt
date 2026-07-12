@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import soia.authezat.app.controller.access.payloads.RolePayload
-import soia.authezat.app.controller.server.payloads.EndpointPayload
+import soia.authezat.app.controller.server.payloads.EndpointPayloadFetchRole
 import soia.authezat.app.controller.server.payloads.ServerPayload
 import soia.authezat.app.utils.asLocal
 import soia.authezat.domain.service.client.ClientService
@@ -37,14 +37,14 @@ class ServerController(
         @RequestParam afterModifiedAt: OffsetDateTime,
         @RequestParam name: String,
         @RequestParam key: String,
-    ): List<EndpointPayload> {
+    ): List<EndpointPayloadFetchRole> {
         require(clientService.existByNameAndKey(name = name, key = key))
 
         return endpointService
             .findAllByModifiedAtGreaterThenFetchRole(afterModifiedAt = afterModifiedAt.asLocal())
             .map { endpoint ->
                 val roles: List<RolePayload> = endpoint.roles.map { RolePayload(srl = it.srl, name = it.name) }
-                EndpointPayload(
+                EndpointPayloadFetchRole(
                     srl = endpoint.srl,
                     serverSrl = endpoint.serverSrl,
                     method = endpoint.method,

@@ -23,6 +23,18 @@ interface RoleRepository : JpaRepository<RoleEntity, Long> {
         from RoleEntity r
         inner join r.userRelations ur
         inner join ur.user u
+        inner join r.serverRelations sr
+        inner join sr.server s
+        where u.id = :userId 
+          and s.srl = :serverSrl
+    """)
+    fun existsByUserIdAndServerSrl(userId: UUID, serverSrl: Long): Boolean
+
+    @Query("""
+        select count(1) > 0
+        from RoleEntity r
+        inner join r.userRelations ur
+        inner join ur.user u
         where r.srl = :srl 
           and u.id = :userId
     """)

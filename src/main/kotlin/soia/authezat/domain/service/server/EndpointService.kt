@@ -3,6 +3,7 @@ package soia.authezat.domain.service.server
 import soia.authezat.app.controller.server.payloads.EndpointSavePayload
 import soia.authezat.domain.service.server.values.Endpoint
 import soia.authezat.domain.service.server.values.EndpointDetail
+import soia.authezat.domain.service.server.values.EndpointFetchRoleAndDetail
 import java.time.LocalDateTime
 import java.util.*
 
@@ -12,7 +13,7 @@ interface EndpointService {
 
     fun findAllByServerSrl(serverSrl: Long): List<Endpoint>
 
-    fun findAllByServerSrlAndUserId(serverSrl: Long, userId: UUID): List<Endpoint>
+    fun findAllByServerSrlAndUserIdFetchRolesAndDetail(serverSrl: Long, userId: UUID): List<EndpointFetchRoleAndDetail>
 
     fun findAllByModifiedAtGreaterThenFetchRole(afterModifiedAt: LocalDateTime): List<Endpoint>
 
